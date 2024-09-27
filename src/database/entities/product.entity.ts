@@ -1,8 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { ProductCategory } from './enums/productCategory';
+import { ProductCategory } from './enums/productCategory.enum';
 
-@Entity('products')
-export class Products {
+@Entity('product')
+export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

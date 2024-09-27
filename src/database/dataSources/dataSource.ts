@@ -13,6 +13,8 @@ export const dataSource = new DataSource({
   synchronize: false,
   migrations: ['dist/database/migrations/*.js'],
   migrationsRun: true,
+  migrationsTableName: '_migrations',
+  logging: true,
 });
 
 dataSource

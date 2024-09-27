@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
-import { ProductCategory } from '../entities/enums/productCategory';
+import { ProductCategory } from '../entities/enums/productCategory.enum';
 
-export class Products1727442999123 implements MigrationInterface {
+export class Product1727442999123 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const productCategoryItens = Object.keys(ProductCategory).map(key => {
       return ProductCategory[key];
