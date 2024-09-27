@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { CreateProductDto } from 'src/database/dto/create-product.dto';
+import { UpdateProductDto } from 'src/database/dto/update-product.dto';
 import { Product } from 'src/database/entities/product.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class ProductService {
@@ -9,7 +11,7 @@ export class ProductService {
     private readonly repository: Repository<Product>
   ) {}
 
-  getAll = async (): Promise<Product[] | Error> => {
+  findAll = async (): Promise<Product[] | Error> => {
     try {
       const dbResponse = await this.repository.find();
       return dbResponse;
@@ -18,7 +20,7 @@ export class ProductService {
     }
   };
 
-  getById = async (id: string): Promise<Product | Error> => {
+  findById = async (id: string): Promise<Product | Error> => {
     try {
       const dbResponse = await this.repository.findOneBy({ id: id });
       return dbResponse;
@@ -27,33 +29,32 @@ export class ProductService {
     }
   };
 
-  add = async (product: Product): Promise<Product | Error> => {
+  create = async (product: CreateProductDto): Promise<InsertResult | Error> => {
     try {
-      const dbResponse = await this.repository.save(product);
+      const dbResponse = await this.repository.insert(product);
       return dbResponse;
     } catch (error) {
       throw new Error(error.message);
     }
   };
 
-  update = async (product: Product): Promise<Product | Error> => {
+  update = async (
+    id: string,
+    product: UpdateProductDto
+  ): Promise<UpdateResult | Error> => {
     try {
-      if (!product.id) throw new Error('Item não possui uma chave');
+      if (!id) throw new Error('Item não possui uma chave');
 
-      const queryResult = await this.repository.findOneBy({ id: product.id });
-
-      if (!queryResult) throw new Error('Chave inexistente');
-
-      const dbResponse = await this.repository.save(product);
+      const dbResponse = await this.repository.update(id, product);
       return dbResponse;
     } catch (error) {
       throw new Error(error.message);
     }
   };
 
-  remove = async (product: Product): Promise<Product | Error> => {
+  remove = async (id: string): Promise<DeleteResult | Error> => {
     try {
-      const dbResponse = await this.repository.remove(product);
+      const dbResponse = await this.repository.delete(id);
       return dbResponse;
     } catch (error) {
       throw new Error(error.message);

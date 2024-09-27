@@ -1,21 +1,121 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProductService } from '../../services/product.service';
+import { CreateProductDto } from 'src/database/dto/create-product.dto';
+import { UpdateProductDto } from 'src/database/dto/update-product.dto';
+import { ProductCategory } from 'src/database/entities/enums/productCategory.enum';
+import { ProductService } from 'src/services/product.service';
 import { ProductController } from '../product.controller';
 
-describe('AppController', () => {
-  let app: TestingModule;
+describe('ProductController', () => {
+  let controller: ProductController;
+  let service: ProductService;
 
-  beforeAll(async () => {
-    app = await Test.createTestingModule({
+  const mockProductService = {
+    create: jest.fn((dto: CreateProductDto) => ({
+      id: '1',
+      ...dto,
+    })),
+    findAll: jest.fn(() => [
+      {
+        id: '1',
+        name: 'Product 1',
+        description: 'Description 1',
+        price: 100.0,
+        category: ProductCategory.ELETRONICOS,
+      },
+    ]),
+    findById: jest.fn((id: string) => ({
+      id,
+      name: 'Product 1',
+      description: 'Description 1',
+      price: 100.0,
+      category: ProductCategory.ELETRONICOS,
+    })),
+    update: jest.fn((id: string, dto: UpdateProductDto) => ({
+      id,
+      ...dto,
+    })),
+    remove: jest.fn((id: string) => ({
+      id,
+      deleted: true,
+    })),
+  };
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductController],
-      providers: [ProductService],
+      providers: [
+        {
+          provide: ProductService,
+          useValue: mockProductService,
+        },
+      ],
     }).compile();
+
+    controller = module.get<ProductController>(ProductController);
+    service = module.get<ProductService>(ProductService);
   });
 
-  describe('getHello', () => {
-    it('should return "Hello World!"', () => {
-      // const appController = app.get(ProductController);
-      // expect(appController.getHello()).toBe('Hello World!');
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
+  it('should create a product', async () => {
+    const createDto: CreateProductDto = {
+      name: 'Product 1',
+      description: 'Description 1',
+      price: 100.0,
+      category: ProductCategory.ELETRONICOS,
+    };
+    expect(await controller.create(createDto)).toEqual({
+      id: '1',
+      ...createDto,
     });
+    expect(service.create).toHaveBeenCalledWith(createDto);
+  });
+
+  it('should return all products', async () => {
+    expect(await controller.findAll()).toEqual([
+      {
+        id: '1',
+        name: 'Product 1',
+        description: 'Description 1',
+        price: 100.0,
+        category: ProductCategory.ELETRONICOS,
+      },
+    ]);
+    expect(service.findAll).toHaveBeenCalled();
+  });
+
+  it('should return a single product by id', async () => {
+    expect(await controller.findOne('1')).toEqual({
+      id: '1',
+      name: 'Product 1',
+      description: 'Description 1',
+      price: 100.0,
+      category: ProductCategory.ELETRONICOS,
+    });
+    expect(service.findById).toHaveBeenCalledWith('1');
+  });
+
+  it('should update a product', async () => {
+    const updateDto: UpdateProductDto = {
+      name: 'Updated Product',
+      description: 'Updated Description',
+      price: 150.0,
+      category: ProductCategory.ROUPAS,
+    };
+    expect(await controller.update('1', updateDto)).toEqual({
+      id: '1',
+      ...updateDto,
+    });
+    expect(service.update).toHaveBeenCalledWith('1', updateDto);
+  });
+
+  it('should remove a product', async () => {
+    expect(await controller.remove('1')).toEqual({
+      id: '1',
+      deleted: true,
+    });
+    expect(service.remove).toHaveBeenCalledWith('1');
   });
 });
