@@ -6,8 +6,8 @@
   "main": "src/index.js",
   "scripts": {
     "typeorm": "typeorm-ts-node-commonjs",
-    "migration:run": "npm run build && npx typeorm migration:run",
-    "start:prod": "npm run build && npm run typeorm migration:run -- -d dist/database/dataSources/dataSource.js && node dist/main",
+    "migration:run": "npm run build && npm run typeorm migration:run -- -d dist/database/dataSources/dataSource.js",
+    "start:prod": "npm run build && node dist/main",
     "build": "dotenv -e .env -- nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -29,10 +29,12 @@
     "@nestjs/core": "^10.3.2",
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/platform-express": "^10.3.2",
+    "@nestjs/swagger": "^7.4.2",
     "@nestjs/typeorm": "^10.0.2",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
+    "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20"
   },
   "bugs": {
