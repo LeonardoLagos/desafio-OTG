@@ -20,7 +20,7 @@ describe('ProductController', () => {
         name: 'Product 1',
         description: 'Description 1',
         price: 100.0,
-        category: ProductCategory.ELETRONICOS,
+        category: ProductCategory.ELETRONICS,
       },
     ]),
     findById: jest.fn((id: string) => ({
@@ -28,7 +28,7 @@ describe('ProductController', () => {
       name: 'Product 1',
       description: 'Description 1',
       price: 100.0,
-      category: ProductCategory.ELETRONICOS,
+      category: ProductCategory.ELETRONICS,
     })),
     update: jest.fn((id: string, dto: UpdateProductDto) => ({
       id,
@@ -64,7 +64,7 @@ describe('ProductController', () => {
       name: 'Product 1',
       description: 'Description 1',
       price: 100.0,
-      category: ProductCategory.ELETRONICOS,
+      category: ProductCategory.ELETRONICS,
     };
     expect(await controller.create(createDto)).toEqual({
       id: '1',
@@ -80,7 +80,7 @@ describe('ProductController', () => {
         name: 'Product 1',
         description: 'Description 1',
         price: 100.0,
-        category: ProductCategory.ELETRONICOS,
+        category: ProductCategory.ELETRONICS,
       },
     ]);
     expect(service.findAll).toHaveBeenCalled();
@@ -92,7 +92,7 @@ describe('ProductController', () => {
       name: 'Product 1',
       description: 'Description 1',
       price: 100.0,
-      category: ProductCategory.ELETRONICOS,
+      category: ProductCategory.ELETRONICS,
     });
     expect(service.findById).toHaveBeenCalledWith('1');
   });
@@ -102,7 +102,7 @@ describe('ProductController', () => {
       name: 'Updated Product',
       description: 'Updated Description',
       price: 150.0,
-      category: ProductCategory.ROUPAS,
+      category: ProductCategory.CLOTHES,
     };
     expect(await controller.update('1', updateDto)).toEqual({
       id: '1',

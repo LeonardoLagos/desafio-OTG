@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateProductDto } from 'src/database/dto/create-product.dto';
 import { UpdateProductDto } from 'src/database/dto/update-product.dto';
 import { Product } from 'src/database/entities/product.entity';
-import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
@@ -16,7 +16,7 @@ export class ProductService {
       const dbResponse = await this.repository.find();
       return dbResponse;
     } catch (error) {
-      return new Error(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   };
 
@@ -25,39 +25,37 @@ export class ProductService {
       const dbResponse = await this.repository.findOneBy({ id: id });
       return dbResponse;
     } catch (error) {
-      throw new Error(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   };
 
-  create = async (product: CreateProductDto): Promise<InsertResult | Error> => {
+  create = async (product: CreateProductDto): Promise<string | Error> => {
     try {
-      const dbResponse = await this.repository.insert(product);
-      return dbResponse;
+      await this.repository.insert(product);
+      return 'Product created with sucess!';
     } catch (error) {
-      throw new Error(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   };
 
   update = async (
     id: string,
     product: UpdateProductDto
-  ): Promise<UpdateResult | Error> => {
+  ): Promise<string | Error> => {
     try {
-      if (!id) throw new Error('Item não possui uma chave');
-
-      const dbResponse = await this.repository.update(id, product);
-      return dbResponse;
+      await this.repository.update(id, product);
+      return 'Product updated with sucess!';
     } catch (error) {
-      throw new Error(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   };
 
-  remove = async (id: string): Promise<DeleteResult | Error> => {
+  remove = async (id: string): Promise<string | Error> => {
     try {
-      const dbResponse = await this.repository.delete(id);
-      return dbResponse;
+      await this.repository.delete(id);
+      return 'Product removed with sucess!';
     } catch (error) {
-      throw new Error(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   };
 }
