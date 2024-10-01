@@ -12,7 +12,7 @@
 
 ### Criação das Tabelas do Banco
 
-Agora, existem duas maneiras de criar as tabelas no banco de dados:
+Existem duas maneiras de criar as tabelas no banco de dados:
 
 - **Opção 1:** Execute as migrações com o seguinte comando:
 
