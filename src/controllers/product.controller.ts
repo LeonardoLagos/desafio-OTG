@@ -16,6 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { CreateProductDto } from 'src/database/dto/create-product.dto';
 import { UpdateProductDto } from 'src/database/dto/update-product.dto';
+import { Product } from 'src/database/entities/product.entity';
 import { ProductService } from 'src/services/product.service';
 
 @ApiTags('products')
@@ -198,5 +199,23 @@ export class ProductController {
   })
   remove(@Param('id') id: string) {
     return this.productService.remove(id);
+  }
+
+  @Post('/maximizeproducts')
+  maximizeProducts(@Body() body: { products: Product[]; budget: number }) {
+    const { products, budget } = body;
+    const sortedProducts = products.sort((a, b) => a.price - b.price);
+
+    const result: Product[] = [];
+    let totalSpent = 0;
+
+    for (const product of sortedProducts) {
+      if (totalSpent + product.price <= budget) {
+        result.push(product);
+        totalSpent += product.price;
+      }
+    }
+
+    return result;
   }
 }
