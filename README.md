@@ -12,6 +12,8 @@
 
 ### Criação das Tabelas do Banco
 
+Diagrama completo do banco: https://dbdiagram.io/d/Desafio-OTG-66f5cfef3430cb846cc32e84
+
 Existem duas maneiras de criar as tabelas no banco de dados:
 
 - **Opção 1:** Execute as migrações com o seguinte comando:
